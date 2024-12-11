@@ -1,0 +1,45 @@
+<div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div *ngFor="let field of formConfig">
+      <label for="{{ field.name }}">{{ field.label }}</label>
+
+      <div *ngIf="field.type === 'text'">
+        <input
+          type="text"
+          [formControlName]="field.name"
+          [placeholder]="field.placeholder"
+        />
+      </div>
+      <div *ngIf="field.type === 'number'">
+        <input
+          type="number"
+          [formControlName]="field.name"
+          [placeholder]="field.placeholder"
+        />
+      </div>
+      <div *ngIf="field.type === 'checkbox'">
+        <input type="checkbox" [formControlName]="field.name" />
+      </div>
+      <div *ngIf="field.type === 'select'">
+        <select [formControlName]="field.name">
+          <option *ngFor="let option of field.options" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+
+      <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched">
+        <small *ngIf="form.get(field.name)?.hasError('required')"
+          >This field is required.</small
+        >
+        <small *ngIf="form.get(field.name)?.hasError('min')"
+          >Value must be at least {{ field.validations.min }}.</small
+        >
+        <small *ngIf="form.get(field.name)?.hasError('max')"
+          >Value must be no more than {{ field.validations.max }}.</small
+        >
+      </div>
+    </div>
+    <button type="submit" [disabled]="form.invalid">Submit</button>
+  </form>
+</div>
